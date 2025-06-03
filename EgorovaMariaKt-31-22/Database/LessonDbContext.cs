@@ -10,12 +10,12 @@ namespace EgorovaMariaKt_31_22.Database
 
         //таблицы
 
-        DbSet <Lesson> Lessons { get; set; }
-        DbSet<Teacher> Teachers { get; set; }
-        DbSet<WorkTime> WorkTimes { get; set; }
-        DbSet<Department> Departments { get; set; }
-        DbSet<Position> Positions { get; set; }
-        DbSet<AcademicDegree> AcademicDegrees { get; set; }
+        public DbSet <Lesson> Lessons { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<WorkTime> WorkTimes { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Position> Positions { get; set; }
+        public DbSet<AcademicDegree> AcademicDegrees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,9 @@ namespace EgorovaMariaKt_31_22.Database
            modelBuilder.ApplyConfiguration(new LessonConfiguration());
             modelBuilder.ApplyConfiguration(new TeacherConfiguration());
             modelBuilder.ApplyConfiguration(new WorkTimeConfiguration());
+            modelBuilder.ApplyConfiguration(new AcademicDegreeConfiguration());
+            modelBuilder.ApplyConfiguration(new PositionConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
 
         }
 

@@ -4,7 +4,13 @@
     {
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
-        public string DepartmentMainTeacher { get; set; } // Старший преподаватель кафедры
         public bool IsDeleted { get; set; } = false;
+
+        // Связь с заведующим кафедрой (преподавателем)
+        public int HeadTeacherId { get; set; }
+        public Teacher HeadTeacher { get; set; }
+
+        // Преподаватели кафедры
+        //public ICollection<Teacher> Teachers { get; set; }
     }
 }

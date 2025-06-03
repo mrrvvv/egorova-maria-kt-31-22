@@ -6,10 +6,11 @@
         public string LessonName { get; set; }
         public bool IsDeleted { get; set; } = false;
 
+ 
         public int TeacherId { get; set; }
         public Teacher Teacher { get; set; }
-        public int WorkTimeHours { get; set; }
+        public int WorkTimeId { get; set; }
         public WorkTime WorkTime { get; set; }
-        public ICollection<WorkTime> WorkTimes { get; set; }
+
     }
 }

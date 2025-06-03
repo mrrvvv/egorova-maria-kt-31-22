@@ -25,44 +25,61 @@ namespace EgorovaMariaKt_31_22.Migrations
                 {
                     b.Property<int>("AcademicDegreeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("academic_degree_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AcademicDegreeId"));
 
                     b.Property<string>("AcademicDegreeName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_degree_name")
+                        .HasComment("Название ученой степени");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
 
-                    b.HasKey("AcademicDegreeId");
+                    b.HasKey("AcademicDegreeId")
+                        .HasName("pk_cd_academic_degree_academic_degree_id");
 
-                    b.ToTable("AcademicDegrees");
+                    b.ToTable("cd_academic_degree", (string)null);
                 });
 
             modelBuilder.Entity("EgorovaMariaKt_31_22.Models.Department", b =>
                 {
                     b.Property<int>("DepartmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("department_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DepartmentId"));
 
-                    b.Property<string>("DepartmentMainTeacher")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("DepartmentName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_department_name")
+                        .HasComment("Название кафедры");
+
+                    b.Property<int>("HeadTeacherId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
 
-                    b.HasKey("DepartmentId");
+                    b.HasKey("DepartmentId")
+                        .HasName("pk_cd_department_department_id");
 
-                    b.ToTable("Departments");
+                    b.HasIndex("HeadTeacherId");
+
+                    b.ToTable("cd_department", (string)null);
                 });
 
             modelBuilder.Entity("EgorovaMariaKt_31_22.Models.Lesson", b =>
@@ -70,8 +87,7 @@ namespace EgorovaMariaKt_31_22.Migrations
                     b.Property<int>("LessonId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("lesson_id")
-                        .HasComment("Идентификатор записи дисциплины");
+                        .HasColumnName("lesson_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LessonId"));
 
@@ -86,24 +102,20 @@ namespace EgorovaMariaKt_31_22.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar")
                         .HasColumnName("c_lesson_name")
-                        .HasComment("Название предмета");
+                        .HasComment("Название занятия");
 
                     b.Property<int>("TeacherId")
-                        .HasColumnType("integer")
-                        .HasColumnName("teacher_id")
-                        .HasComment("ID преподавателя");
+                        .HasColumnType("integer");
 
-                    b.Property<int>("WorkTimeHours")
-                        .HasColumnType("integer")
-                        .HasColumnName("worktime_id")
-                        .HasComment("ID нагрузки ");
+                    b.Property<int>("WorkTimeId")
+                        .HasColumnType("integer");
 
                     b.HasKey("LessonId")
-                        .HasName("pk_(TableName)_lesson_1d");
+                        .HasName("pk_cd_lesson_lesson_id");
 
-                    b.HasIndex(new[] { "WorkTimeHours" }, "idx+cd_lesson_fk_f_cafedre_id");
+                    b.HasIndex("TeacherId");
 
-                    b.HasIndex(new[] { "TeacherId" }, "idx+cd_lesson_fk_f_teacher_id");
+                    b.HasIndex("WorkTimeId");
 
                     b.ToTable("cd_lesson", (string)null);
                 });
@@ -112,20 +124,28 @@ namespace EgorovaMariaKt_31_22.Migrations
                 {
                     b.Property<int>("PositionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("position_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PositionId"));
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
 
                     b.Property<string>("PositionName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_position_name")
+                        .HasComment("Название должности");
 
-                    b.HasKey("PositionId");
+                    b.HasKey("PositionId")
+                        .HasName("pk_cd_position_position_id");
 
-                    b.ToTable("Positions");
+                    b.ToTable("cd_position", (string)null);
                 });
 
             modelBuilder.Entity("EgorovaMariaKt_31_22.Models.Teacher", b =>
@@ -133,8 +153,7 @@ namespace EgorovaMariaKt_31_22.Migrations
                     b.Property<int>("TeacherId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("teacher_id")
-                        .HasComment("Идентификатор записи преподавателя");
+                        .HasColumnName("teacher_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TeacherId"));
 
@@ -148,28 +167,22 @@ namespace EgorovaMariaKt_31_22.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar")
-                        .HasColumnName("c_teacher_firstname")
-                        .HasComment("Имя");
+                        .HasColumnName("c_first_name")
+                        .HasComment("Имя преподавателя");
 
                     b.Property<string>("TeacherLastName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar")
-                        .HasColumnName("c_teacher_lastname")
-                        .HasComment("Фамилия");
+                        .HasColumnName("c_last_name")
+                        .HasComment("Фамилия преподавателя");
 
                     b.Property<string>("TeacherMiddleName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar")
-                        .HasColumnName("c_teacher_middlename")
-                        .HasComment("Отчество");
-
-                    b.Property<string>("TeacherPosition")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("c_teacher_position");
+                        .HasColumnName("c_middle_name")
+                        .HasComment("Отчество преподавателя");
 
                     b.HasKey("TeacherId")
                         .HasName("pk_cd_teacher_teacher_id");
@@ -182,8 +195,7 @@ namespace EgorovaMariaKt_31_22.Migrations
                     b.Property<int>("WorkTimeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("worktime_id")
-                        .HasComment("Идентификатор записи преподавателя");
+                        .HasColumnName("work_time_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WorkTimeId"));
 
@@ -193,65 +205,48 @@ namespace EgorovaMariaKt_31_22.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_deleted");
 
-                    b.Property<int>("LessonId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("WorkTimeHours")
-                        .HasMaxLength(50)
                         .HasColumnType("integer")
-                        .HasColumnName("c_worktime_hours");
+                        .HasColumnName("c_work_hours")
+                        .HasComment("Количество рабочих часов");
 
                     b.HasKey("WorkTimeId")
-                        .HasName("pk_cd_work_time_worktime_id");
-
-                    b.HasIndex("LessonId");
+                        .HasName("pk_cd_work_time_work_time_id");
 
                     b.ToTable("cd_work_time", (string)null);
+                });
+
+            modelBuilder.Entity("EgorovaMariaKt_31_22.Models.Department", b =>
+                {
+                    b.HasOne("EgorovaMariaKt_31_22.Models.Teacher", "HeadTeacher")
+                        .WithMany()
+                        .HasForeignKey("HeadTeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_department_head_teacher");
+
+                    b.Navigation("HeadTeacher");
                 });
 
             modelBuilder.Entity("EgorovaMariaKt_31_22.Models.Lesson", b =>
                 {
                     b.HasOne("EgorovaMariaKt_31_22.Models.Teacher", "Teacher")
-                        .WithMany("Lessons")
+                        .WithMany()
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_lesson_teacher");
 
                     b.HasOne("EgorovaMariaKt_31_22.Models.WorkTime", "WorkTime")
-                        .WithMany("Lessons")
-                        .HasForeignKey("WorkTimeHours")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("WorkTimeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_lesson_work_time");
 
                     b.Navigation("Teacher");
 
                     b.Navigation("WorkTime");
-                });
-
-            modelBuilder.Entity("EgorovaMariaKt_31_22.Models.WorkTime", b =>
-                {
-                    b.HasOne("EgorovaMariaKt_31_22.Models.Lesson", "Lesson")
-                        .WithMany("WorkTimes")
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Lesson");
-                });
-
-            modelBuilder.Entity("EgorovaMariaKt_31_22.Models.Lesson", b =>
-                {
-                    b.Navigation("WorkTimes");
-                });
-
-            modelBuilder.Entity("EgorovaMariaKt_31_22.Models.Teacher", b =>
-                {
-                    b.Navigation("Lessons");
-                });
-
-            modelBuilder.Entity("EgorovaMariaKt_31_22.Models.WorkTime", b =>
-                {
-                    b.Navigation("Lessons");
                 });
 #pragma warning restore 612, 618
         }

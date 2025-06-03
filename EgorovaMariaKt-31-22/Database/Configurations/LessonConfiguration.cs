@@ -5,63 +5,45 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EgorovaMariaKt_31_22.Database.Configurations
 {
+    // Конфигурация для занятия
     public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
     {
-        //Название таблицы, которое будет отображаться в БД
         private const string TableName = "cd_lesson";
-        public void Configure(EntityTypeBuilder<Lesson> builder) 
+
+        public void Configure(EntityTypeBuilder<Lesson> builder)
         {
-            // Задаем первичный клеч
-            builder
-            .HasKey(p => p.LessonId)
-            .HasName($"pk_(TableName)_lesson_1d");
+            builder.HasKey(l => l.LessonId)
+                   .HasName($"pk_{TableName}_lesson_id");
 
-            // Для целочисленного первичного клеча задаем автогенерацию (к каждой новой записи будет добавлять +1) builder.Property(p=> p.StudentId)
-            builder.Property(p=>p.LessonId)   
-                    .ValueGeneratedOnAdd();
+            builder.Property(l => l.LessonId)
+                  .HasColumnName("lesson_id")
+                  .ValueGeneratedOnAdd();
 
-            //Расписываем как будут называться колонки в БД, а так же их обязательность и тд builder.Property(p=> p.StudentId)
-            builder.Property(p => p.LessonId)
-                .HasColumnName("lesson_id")
-                .HasComment("Идентификатор записи дисциплины");
+            builder.Property(l => l.LessonName)
+                  .IsRequired()
+                  .HasColumnName("c_lesson_name")
+                  .HasColumnType(ColumnType.String).HasMaxLength(100)
+                  .HasComment("Название занятия");
 
-            //HasComment добавит комментарий, который будет отображаться в СУБД (добавлять по желанию) builder. Property(p=> p.FirstName)
-            builder.Property(p => p.LessonName)
-                .IsRequired()
-                .HasColumnName("c_lesson_name")
-                .HasColumnType(ColumnType.String).HasMaxLength(100)
-                .HasComment("Название предмета");
+            // Связь с преподавателем
+            builder.HasOne(l => l.Teacher)
+                  .WithMany()
+                  .HasForeignKey(l => l.TeacherId)
+                  .HasConstraintName("fk_lesson_teacher")
+                  .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(p => p.TeacherId)
-                .HasColumnName("teacher_id")
-                .HasComment("ID преподавателя");
+            // Связь с рабочим временем
+            builder.HasOne(l => l.WorkTime)
+                  .WithMany()
+                  .HasForeignKey(l => l.WorkTimeId)
+                  .HasConstraintName("fk_lesson_work_time")
+                  .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(p => p.WorkTimeHours)
-                .HasColumnName("worktime_id")               
-                .HasComment("ID нагрузки ");
-
-
-            builder.Property(p => p.IsDeleted)
-               .HasColumnName("is_deleted")
-               .HasDefaultValue(false);
-
-            //Связи
-            builder.HasOne(p => p.Teacher)
-                   .WithMany(t => t.Lessons)
-                   .HasForeignKey(p => p.TeacherId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            //Связи
-            builder.HasOne(p => p.WorkTime)
-                   .WithMany(w => w.Lessons)
-                   .HasForeignKey(p => p.WorkTimeHours)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasIndex(p => p.TeacherId, $"idx+{TableName}_fk_f_teacher_id");
-            builder.HasIndex(p => p.WorkTimeHours, $"idx+{TableName}_fk_f_cafedre_id");
+            builder.Property(l => l.IsDeleted)
+                  .HasColumnName("is_deleted")
+                  .HasDefaultValue(false);
 
             builder.ToTable(TableName);
-
         }
     }
 }

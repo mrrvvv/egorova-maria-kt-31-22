@@ -1,61 +1,46 @@
-﻿using EgorovaMariaKt_31_22.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using EgorovaMariaKt_31_22.Database.Helpers;
+using EgorovaMariaKt_31_22.Models;
 using Microsoft.EntityFrameworkCore;
-using EgorovaMariaKt_31_22.Database.Helpers;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EgorovaMariaKt_31_22.Database.Configurations
 {
+    // Конфигурация для преподавателя
     public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
     {
         private const string TableName = "cd_teacher";
 
         public void Configure(EntityTypeBuilder<Teacher> builder)
         {
-            //builder.ToTable(TableName);
-
             builder.HasKey(t => t.TeacherId)
                    .HasName($"pk_{TableName}_teacher_id");
 
-            // Для целочисленного первичного клеча задаем автогенерацию (к каждой новой записи будет добавлять +1) builder.Property(p=> p.StudentId)
-            builder.Property(p => p.TeacherId)
-                    .ValueGeneratedOnAdd();
-
             builder.Property(t => t.TeacherId)
-                   .HasColumnName("teacher_id")
-                   .HasComment("Идентификатор записи преподавателя");
+                  .HasColumnName("teacher_id")
+                  .ValueGeneratedOnAdd();
 
             builder.Property(t => t.TeacherFirstName)
-                   .IsRequired()
-                   .HasColumnName("c_teacher_firstname")
-                   .HasColumnType(ColumnType.String).HasMaxLength(50)
-                   .HasComment("Имя");
+                  .IsRequired()
+                  .HasColumnName("c_first_name")
+                  .HasColumnType(ColumnType.String).HasMaxLength(50)
+                  .HasComment("Имя преподавателя");
 
             builder.Property(t => t.TeacherLastName)
-                   .IsRequired()
-                   .HasColumnName("c_teacher_lastname")
-                   .HasColumnType(ColumnType.String).HasMaxLength(50)
-                   .HasComment("Фамилия");
+                  .IsRequired()
+                  .HasColumnName("c_last_name")
+                  .HasColumnType(ColumnType.String).HasMaxLength(50)
+                  .HasComment("Фамилия преподавателя");
 
             builder.Property(t => t.TeacherMiddleName)
-                   .IsRequired()
-                   .HasColumnName("c_teacher_middlename")
-                   .HasColumnType(ColumnType.String).HasMaxLength(50)
-                   .HasComment("Отчество");
-
-            builder.Property(t => t.TeacherPosition)
-                   .IsRequired()
-                   .HasColumnName("c_teacher_position")
-                   .HasMaxLength(50);
-
-
-            // Остальные свойства...
+                  .HasColumnName("c_middle_name")
+                  .HasColumnType(ColumnType.String).HasMaxLength(50)
+                  .HasComment("Отчество преподавателя");
 
             builder.Property(t => t.IsDeleted)
-                   .HasColumnName("is_deleted")
-                   .HasDefaultValue(false);
+                  .HasColumnName("is_deleted")
+                  .HasDefaultValue(false);
 
             builder.ToTable(TableName);
-
         }
     }
 }

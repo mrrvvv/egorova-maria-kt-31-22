@@ -1,45 +1,32 @@
-﻿using EgorovaMariaKt_31_22.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using EgorovaMariaKt_31_22.Database.Helpers;
+using EgorovaMariaKt_31_22.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EgorovaMariaKt_31_22.Database.Configurations
 {
+    // Конфигурация для рабочего времени
     public class WorkTimeConfiguration : IEntityTypeConfiguration<WorkTime>
     {
         private const string TableName = "cd_work_time";
 
         public void Configure(EntityTypeBuilder<WorkTime> builder)
         {
-            //builder.ToTable(TableName);
+            builder.HasKey(w => w.WorkTimeId)
+                   .HasName($"pk_{TableName}_work_time_id");
 
-            builder.HasKey(p => p.WorkTimeId)
-                   .HasName($"pk_{TableName}_worktime_id");
+            builder.Property(w => w.WorkTimeId)
+                  .HasColumnName("work_time_id")
+                  .ValueGeneratedOnAdd();
 
-            // Для целочисленного первичного клеча задаем автогенерацию (к каждой новой записи будет добавлять +1) builder.Property(p=> p.StudentId)
-            builder.Property(p => p.WorkTimeId)
-                    .ValueGeneratedOnAdd();
+            builder.Property(w => w.WorkTimeHours)
+                  .IsRequired()
+                  .HasColumnName("c_work_hours")
+                  .HasComment("Количество рабочих часов");
 
-            builder.Property(p => p.WorkTimeId)
-                   .HasColumnName("worktime_id")
-                   .HasComment("Идентификатор записи преподавателя");
-
-            builder.Property(p => p.WorkTimeHours)
-                   .IsRequired()
-                   .HasColumnName("c_worktime_hours")
-                   .HasMaxLength(50);
-
-
-            // Остальные свойства...
-
-            builder.Property(p => p.IsDeleted)
-                   .HasColumnName("is_deleted")
-                   .HasDefaultValue(false);
-
-            // Связи
-            builder.HasOne(p => p.Lesson)
-                   .WithMany(l => l.WorkTimes)
-                   .HasForeignKey(p => p.LessonId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(w => w.IsDeleted)
+                  .HasColumnName("is_deleted")
+                  .HasDefaultValue(false);
 
             builder.ToTable(TableName);
         }
