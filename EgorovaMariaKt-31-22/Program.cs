@@ -3,8 +3,9 @@ using NLog;
 using NLog.Web;
 using EgorovaMariaKt_31_22.Database;
 using static EgorovaMariaKt_31_22.ServiceExtensions.ServiceExtensions;
-//
+
 using System.Text.Json.Serialization;
+using EgorovaMariaKt_31_22.Middlewares;
 {
 
     var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,7 @@ using System.Text.Json.Serialization;
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        app.UseMiddleware<ExceptionHandlerMiddleware>();
 
         app.UseAuthorization();
 
